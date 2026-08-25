@@ -332,7 +332,7 @@ body.presenting .topbar{background:transparent; border-color:transparent}
 .graph-card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:13px}
 .graph-card.big{padding:15px}
 .gc-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px}
-.gc-title{font-family:var(--fdisp); font-size:11px; letter-spacing:.14em; color:var(--faint)}
+.gc-title{font-family:var(--fbody); font-weight:600; font-size:12px; letter-spacing:.08em; color:var(--muted)}
 .gc-val{font-family:var(--fdisp); font-weight:700; font-size:24px; color:var(--cyan)}
 .chart{height:64px}
 .chart-svg{width:100%; height:100%}
@@ -342,17 +342,17 @@ body.presenting .topbar{background:transparent; border-color:transparent}
 .growth.pos{color:var(--green)} .growth.neg{color:var(--red)}
 
 .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:9px}
-.mini{text-align:left; background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:10px; cursor:pointer; transition:border-color .2s, transform .1s; position:relative; overflow:hidden}
+.mini{text-align:left; background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:11px; cursor:pointer; transition:border-color .2s, transform .1s; position:relative; overflow:hidden}
 .mini:hover{border-color:var(--cyan-dim); transform:translateY(-1px)}
-.mini label{display:block; font-size:8px; letter-spacing:.12em; color:var(--faint); font-family:var(--fdisp)}
-.mini-val{font-family:var(--fdisp); font-weight:700; font-size:18px; display:block; margin:2px 0}
+.mini label{display:block; font-size:10.5px; line-height:1.25; letter-spacing:.02em; color:var(--muted); font-family:var(--fbody); font-weight:600}
+.mini-val{font-family:var(--fdisp); font-weight:700; font-size:19px; display:block; margin:4px 0 2px}
 .spark{height:22px}
 .spark-svg{width:100%; height:100%}
 
 .secbar{height:16px} .secbar-svg{width:100%; height:100%}
-.sec-legend{display:flex; flex-wrap:wrap; gap:8px; margin-top:9px}
-.sec-legend span{display:flex; align-items:center; gap:4px; font-size:10px; color:var(--muted)}
-.sec-legend i{width:9px; height:9px; border-radius:3px; display:inline-block}
+.sec-legend{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px}
+.sec-legend span{display:flex; align-items:center; gap:5px; font-size:12px; color:var(--text)}
+.sec-legend i{width:10px; height:10px; border-radius:3px; display:inline-block}
 
 /* CENTER tree */
 .tree-wrap{display:flex; flex-direction:column; min-width:0; background:
