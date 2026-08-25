@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ECONOMY: FROM ZERO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/styles.css?v=4"/>
+</head>
+<body>
+
+<!-- ============ MENU ============ -->
+<section id="screen-menu" class="screen">
+  <div class="menu-bg"></div>
+  <div class="menu-content">
+    <div class="brand">
+      <h1 class="brand-title">ECONOMY:<br/><span>FROM ZERO</span></h1>
+      <div class="brand-sub">BUILD IT · BREAK IT · BALANCE IT</div>
+    </div>
+    <nav class="menu-nav">
+      <button class="btn menu-btn primary" id="btn-new">START NEW ECONOMY</button>
+      <button class="btn menu-btn" id="btn-continue">CONTINUE</button>
+      <button class="btn menu-btn" id="btn-challenges">CHALLENGES</button>
+      <button class="btn menu-btn" id="btn-sandbox">SANDBOX</button>
+    </nav>
+    <div class="menu-foot">A real-time economic strategy simulation · Unlock the tree, watch the economy respond</div>
+  </div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="screen-game" class="screen hidden">
+  <header class="topbar">
+    <div class="tb-left">
+      <div id="hud-year" class="tb-year">YEAR 01</div>
+      <div id="hud-era" class="tb-era">🌱 SURVIVAL</div>
+    </div>
+    <div class="tb-center">
+      <div class="transport">
+        <button class="tp-btn" id="btn-play" title="Play / Pause">⏸</button>
+        <button class="tp-speed" data-mult="0.5" title="Slow">0.5×</button>
+        <button class="tp-speed" data-mult="1" title="Normal">1×</button>
+        <button class="tp-speed active" data-mult="2" title="Fast">2×</button>
+        <button class="tp-speed" data-mult="4" title="Faster">4×</button>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-treasury"><span id="hud-treasury" data-val="0">₹10B</span><label>TREASURY</label></div>
+      <button class="btn tiny" id="btn-present">▶ PRESENT</button>
+      <button class="btn tiny" id="btn-save">SAVE</button>
+      <button class="btn tiny" id="btn-menu">MENU</button>
+    </div>
+  </header>
+
+  <div class="game-main">
+    <!-- LEFT: live graphs -->
+    <aside class="graphs">
+      <div class="graph-card big">
+        <div class="gc-head"><span class="gc-title">GDP</span><span class="gc-val" id="g-gdp" data-val="0">₹0</span></div>
+        <div class="chart" id="chart-gdp"></div>
+        <div class="gc-sub"><span id="g-growth" class="growth">+0.0%</span> annual growth</div>
+      </div>
+      <div class="stat-grid">
+        <button class="mini" data-stat="inflation"><label>INFLATION</label><span class="mini-val" id="m-inflation">0%</span><div class="spark" id="sp-inflation"></div></button>
+        <button class="mini" data-stat="unemployment"><label>UNEMPLOYMENT</label><span class="mini-val" id="m-unemployment">0%</span><div class="spark" id="sp-unemployment"></div></button>
+        <button class="mini" data-stat="debt"><label>DEBT / GDP</label><span class="mini-val" id="m-debt">0%</span><div class="spark" id="sp-debt"></div></button>
+        <button class="mini" data-stat="humanCapital"><label>HUMAN CAPITAL</label><span class="mini-val" id="m-humanCapital">0</span><div class="spark" id="sp-humanCapital"></div></button>
+        <button class="mini" data-stat="technology"><label>TECHNOLOGY</label><span class="mini-val" id="m-technology">0</span><div class="spark" id="sp-technology"></div></button>
+        <button class="mini" data-stat="sustainability"><label>SUSTAINABILITY</label><span class="mini-val" id="m-sustainability">0</span><div class="spark" id="sp-sustainability"></div></button>
+      </div>
+      <div class="graph-card">
+        <div class="gc-head"><span class="gc-title">SECTOR MIX</span></div>
+        <div class="secbar" id="secbar"></div>
+        <div class="sec-legend">
+          <span><i style="background:#4fae5e"></i>Agri</span><span><i style="background:#c9a24b"></i>Mining</span>
+          <span><i style="background:#c98a52"></i>Mfg</span><span><i style="background:#4aa3ff"></i>Services</span><span><i style="background:#a06bff"></i>Tech</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: skill tree -->
+    <main class="tree-wrap">
+      <div class="tree-head"><span class="th-title">TECHNOLOGY & DEVELOPMENT TREE</span><span class="th-hint">click a node to analyse · unlock when affordable</span></div>
+      <div id="tree-scroll" class="tree-scroll"><div id="tree-container" class="tree-container"></div></div>
+    </main>
+
+    <!-- RIGHT: analysis + feed -->
+    <aside class="analysis">
+      <div id="analysis" class="analysis-body">
+        <div class="an-empty">
+          <div class="an-empty-icon">◈</div>
+          <div class="an-empty-title">SELECT A NODE</div>
+          <p>Every unlock ripples through the economy. Click any node in the tree to see its purpose and projected effects, then unlock it when you can afford it.</p>
+          <p class="an-empty-hint">The economy runs in real time. Watch the graphs respond.</p>
+        </div>
+      </div>
+      <div class="feed-wrap">
+        <div class="feed-head">LIVE FEED</div>
+        <div id="feed" class="feed"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ripple / banners / toast -->
+  <div id="ripple-layer" class="ripple-layer hidden"></div>
+  <div id="banner-stack" class="banner-stack"></div>
+  <div id="toast" class="toast"></div>
+</section>
+
+<!-- ============ OVERLAY ============ -->
+<div id="overlay" class="overlay hidden">
+  <div class="overlay-panel">
+    <button id="overlay-close" class="overlay-close">✕</button>
+    <div id="overlay-title" class="overlay-title"></div>
+    <div id="overlay-body" class="overlay-body"></div>
+  </div>
+</div>
+
+<script src="js/engine.js?v=4"></script>
+<script src="js/data.js?v=4"></script>
+<script src="js/charts.js?v=4"></script>
+<script src="js/tree.js?v=4"></script>
+<script src="js/ui.js?v=4"></script>
+<script src="js/main.js?v=4"></script>
+</body>
+</html>
