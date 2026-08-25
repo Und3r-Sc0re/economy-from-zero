@@ -166,7 +166,7 @@
       options: [
         { label: "Open capital markets", hint: "Growth now, volatility risk", effect: { sector: { manufacturing: 6, services: 5 }, treasury: 8, dev: { inequality: 2 }, flags: { hotmoney: true } } },
         { label: "Selective approval", hint: "", effect: { sector: { manufacturing: 3 }, treasury: 4 } },
-        { label: "Stay closed", hint: "", effect: {} }
+        { label: "Stay closed", hint: "Protects control, forfeits the capital", effect: { dev: { livingStandards: -1 }, currency: -0.01 } }
       ] },
     { id: "techbreak", title: "✦ Technology Breakthrough", weight: s => s.technology > 25 ? 2 : 0.4,
       body: s => "Your researchers achieve a breakthrough with global demand.",

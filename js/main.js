@@ -100,10 +100,17 @@
     let result = null, ev = null;
     const steps = stepsPerTick();
     for (let i = 0; i < steps; i++) {
-      result = E.endYear(S);
+      const couldAct = D.TREE.some(n => { const st = stateFor(n); return !st.unlocked && st.available && st.affordable; });
+      result = E.endYear(S, { couldAct });
       if (S.debt / Math.max(1, S.gdp) < 0.3) S._lowDebtStreak = (S._lowDebtStreak || 0) + 1; else S._lowDebtStreak = 0;
       milestones(); checkAchievements();
-      if (result.crisis) { feed("⚠ " + result.crisis.msg, result.crisis.severe ? "bad" : "warn"); flashMood(result.crisis); }
+      if (result.crisis) {
+        const streakTxt = result.crisis.streak ? ` (unresolved ${result.crisis.streak}yr)` : "";
+        feed("⚠ " + result.crisis.msg + streakTxt, result.crisis.severe ? "bad" : "warn");
+        flashMood(result.crisis);
+      }
+      if (result.neglect === 1) feed("Nothing unlocked in a while — the economy is starting to drift.", "warn");
+      else if (result.neglect === 4) feed("⚠ Prolonged neglect — decay is accelerating.", "bad");
       ev = maybeEvent();
       if (ev || S.gameOver || S.year > YEAR_CAP) break; // stop the batch on anything that needs attention
     }
@@ -207,6 +214,7 @@
     if (st.unlocked || !st.available || !st.affordable) return;
     S.treasury -= node.cost;
     S.treeUnlocked[node.id] = true;
+    S.flags.missedYears = 0;
     // feature flags so the engine seeds/permits the right sectors
     S.unlocked[node.id] = true;
     const e = node.effect || {};
@@ -266,6 +274,7 @@
     $$(".opt").forEach(btn => btn.onclick = () => {
       const o = ev.options[+btn.dataset.i];
       closeOverlay();
+      S.flags.missedYears = 0;
       if (o.apply) o.apply(S);
       const chain = E.applyEffect(S, o.effect || {}, ev.title.replace(/^[⚠✦]\s*/, ""));
       E.recompute(S); renderHUD(); updateCharts(); refreshTree();
