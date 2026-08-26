@@ -27,6 +27,10 @@
     $("#overlay-close").onclick = closeOverlay;
     $$(".tp-speed").forEach(b => b.onclick = () => setSpeed(+b.dataset.mult, b));
     $$(".mini").forEach(m => m.onclick = () => explainStat(m.dataset.stat));
+    $("#tree-zoom-in").onclick = () => tree && T.zoomIn(tree);
+    $("#tree-zoom-out").onclick = () => tree && T.zoomOut(tree);
+    $("#tree-zoom-fit").onclick = () => tree && T.zoomFit(tree);
+    $("#tree-zoom-reset").onclick = () => tree && T.zoomReset(tree);
 
     document.addEventListener("keydown", e => {
       if ($("#screen-game").classList.contains("hidden")) return;

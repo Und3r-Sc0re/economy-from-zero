@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="css/styles.css?v=10"/>
+<link rel="stylesheet" href="css/styles.css?v=12"/>
 </head>
 <body>
 
@@ -81,8 +81,16 @@
 
     <!-- CENTER: skill tree -->
     <main class="tree-wrap">
-      <div class="tree-head"><span class="th-title">TECHNOLOGY & DEVELOPMENT TREE</span><span class="th-hint">click a node to analyse · unlock when affordable</span></div>
-      <div id="tree-scroll" class="tree-scroll"><div id="tree-container" class="tree-container"></div></div>
+      <div class="tree-head"><span class="th-title">TECHNOLOGY & DEVELOPMENT TREE</span><span class="th-hint">drag to move · scroll to zoom · click a node to analyse</span></div>
+      <div id="tree-scroll" class="tree-scroll">
+        <div id="tree-container" class="tree-container"></div>
+        <div class="zoom-controls">
+          <button class="zoom-btn" id="tree-zoom-in" title="Zoom in">+</button>
+          <button class="zoom-btn" id="tree-zoom-out" title="Zoom out">−</button>
+          <button class="zoom-btn small" id="tree-zoom-fit" title="Fit whole tree">⤢</button>
+          <button class="zoom-btn small" id="tree-zoom-reset" title="Recenter">◎</button>
+        </div>
+      </div>
     </main>
 
     <!-- RIGHT: analysis + feed -->
@@ -117,11 +125,11 @@
   </div>
 </div>
 
-<script src="js/engine.js?v=10"></script>
-<script src="js/data.js?v=10"></script>
-<script src="js/charts.js?v=10"></script>
-<script src="js/tree.js?v=10"></script>
-<script src="js/ui.js?v=10"></script>
-<script src="js/main.js?v=10"></script>
+<script src="js/engine.js?v=12"></script>
+<script src="js/data.js?v=12"></script>
+<script src="js/charts.js?v=12"></script>
+<script src="js/tree.js?v=12"></script>
+<script src="js/ui.js?v=12"></script>
+<script src="js/main.js?v=12"></script>
 </body>
 </html>
