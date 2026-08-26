@@ -179,28 +179,28 @@
     //    saving up for an expensive unlock is never punished as neglect.
     if (opts.couldAct) s.flags.missedYears = (s.flags.missedYears || 0) + 1;
     else s.flags.missedYears = Math.max(0, (s.flags.missedYears || 0) - 1);
-    const neglect = Math.max(0, s.flags.missedYears - 2); // two free years of grace
+    const neglect = Math.max(0, s.flags.missedYears - 3); // three free years of grace
     if (neglect > 0) {
-      const severity = Math.min(neglect, 14); // still escalates hard, just bounded
-      s.humanCapital = clampDev("humanCapital", s.humanCapital - 0.35 * severity);
-      s.infrastructure = clampDev("infrastructure", s.infrastructure - 0.45 * severity);
-      s.sustainability = clampDev("sustainability", s.sustainability - 0.25 * severity);
-      s.inflation = clamp(s.inflation + 0.007 * severity, -0.05, 0.9);
-      s.unemployment = clamp(s.unemployment + 0.007 * severity, 0.02, 0.85);
-      s.treasury -= s.gdp * 0.012 * severity; // status quo still costs money to run
+      const severity = Math.min(neglect, 14);
+      s.humanCapital = clampDev("humanCapital", s.humanCapital - 0.26 * severity);
+      s.infrastructure = clampDev("infrastructure", s.infrastructure - 0.34 * severity);
+      s.sustainability = clampDev("sustainability", s.sustainability - 0.18 * severity);
+      s.inflation = clamp(s.inflation + 0.0052 * severity, -0.05, 0.9);
+      s.unemployment = clamp(s.unemployment + 0.0052 * severity, 0.02, 0.85);
+      s.treasury -= s.gdp * 0.009 * severity; // status quo still costs money to run
     } else {
       // small baseline, only while actively engaged with the tree/events
       const ls = s.livingStandards / 100;
-      s.humanCapital = clampDev("humanCapital", s.humanCapital + 0.1 + 0.25 * ls);
-      if (s.unlocked.technology) s.technology = clampDev("technology", s.technology + 0.12 + 0.3 * (s.humanCapital / 100));
+      s.humanCapital = clampDev("humanCapital", s.humanCapital + 0.12 + 0.28 * ls);
+      if (s.unlocked.technology) s.technology = clampDev("technology", s.technology + 0.14 + 0.32 * (s.humanCapital / 100));
     }
-    s.infrastructure = clampDev("infrastructure", s.infrastructure - 0.15); // upkeep decay always applies
+    s.infrastructure = clampDev("infrastructure", s.infrastructure - 0.12); // upkeep decay always applies
 
     // Inequality past a threshold breeds unrest — a slow-burn tax on employment.
-    if (s.inequality > 60) s.unemployment = clamp(s.unemployment + 0.005 * (s.inequality - 60), 0.02, 0.85);
+    if (s.inequality > 65) s.unemployment = clamp(s.unemployment + 0.004 * (s.inequality - 65), 0.02, 0.85);
     // Sustainability collapse directly damages output, not just optics.
-    if (s.sustainability < 20) {
-      const dmg = (20 - s.sustainability) * 0.012;
+    if (s.sustainability < 15) {
+      const dmg = (15 - s.sustainability) * 0.012;
       s.sectors.agriculture = Math.max(0, s.sectors.agriculture * (1 - dmg));
       s.livingStandards = clampDev("livingStandards", s.livingStandards - dmg * 40);
     }
@@ -224,11 +224,11 @@
     const tech = s.technology / 100, hc = s.humanCapital / 100;
     const invest = clamp(s.treasury / Math.max(30, s.gdp), 0, 0.06); // reinvestment capacity (small; hoarding isn't a strategy)
     const sectorRates = {
-      agriculture:  0.004 + 0.07 * prod + 0.05 * infra,
-      mining:       0.003 + 0.07 * infra + 0.05 * invest,
-      manufacturing:0.005 + 0.14 * prod + 0.14 * infra + 0.08 * invest,
-      services:     0.005 + 0.14 * prod + 0.12 * hc + 0.05 * invest,
-      technology:   0.006 + 0.26 * tech + 0.17 * hc + 0.05 * invest
+      agriculture:  0.007 + 0.08 * prod + 0.06 * infra,
+      mining:       0.005 + 0.08 * infra + 0.06 * invest,
+      manufacturing:0.008 + 0.16 * prod + 0.16 * infra + 0.09 * invest,
+      services:     0.008 + 0.16 * prod + 0.13 * hc + 0.06 * invest,
+      technology:   0.010 + 0.28 * tech + 0.18 * hc + 0.06 * invest
     };
     // trade demand bonus
     for (const t of Object.values(s.trade)) {
@@ -313,7 +313,7 @@
     // premium once debt gets heavy, which raises interest, which raises next
     // year's spending, which raises debt further. This is a genuine spiral.
     const debtRatioNow = s.debt / Math.max(1, s.gdp);
-    const debtPremium = debtRatioNow > 0.5 ? Math.pow(debtRatioNow - 0.5, 1.6) * 0.9 : 0;
+    const debtPremium = debtRatioNow > 0.58 ? Math.pow(debtRatioNow - 0.58, 1.5) * 0.75 : 0;
     s.interestRate = clamp(0.03 + 0.7 * (s.inflation - 0.02) + debtPremium, 0.01, 0.6);
 
     // 8) Population growth tied to living standards.
@@ -359,18 +359,18 @@
   function checkCrises(s) {
     const debtRatio = s.debt / Math.max(1, s.gdp);
     let c = null;
-    if (debtRatio > 0.75) c = { type: "debt", severe: debtRatio > 1.1, msg: "Debt at " + Math.round(debtRatio * 100) + "% of GDP" };
-    else if (s.inflation > 0.16) c = { type: "inflation", severe: s.inflation > 0.32, msg: "Runaway inflation at " + (s.inflation * 100).toFixed(0) + "%" };
-    else if (s.unemployment > 0.15) c = { type: "unemployment", severe: s.unemployment > 0.28, msg: "Unemployment crisis at " + (s.unemployment * 100).toFixed(0) + "%" };
-    else if (s.currency < 0.55) c = { type: "currency", severe: s.currency < 0.4, msg: "Currency collapse" };
-    else if (s.gdpGrowth < -0.015) c = { type: "recession", severe: s.gdpGrowth < -0.05, msg: "Recession — GDP shrank " + (s.gdpGrowth * 100).toFixed(1) + "%" };
+    if (debtRatio > 0.85) c = { type: "debt", severe: debtRatio > 1.2, msg: "Debt at " + Math.round(debtRatio * 100) + "% of GDP" };
+    else if (s.inflation > 0.19) c = { type: "inflation", severe: s.inflation > 0.35, msg: "Runaway inflation at " + (s.inflation * 100).toFixed(0) + "%" };
+    else if (s.unemployment > 0.18) c = { type: "unemployment", severe: s.unemployment > 0.30, msg: "Unemployment crisis at " + (s.unemployment * 100).toFixed(0) + "%" };
+    else if (s.currency < 0.5) c = { type: "currency", severe: s.currency < 0.35, msg: "Currency collapse" };
+    else if (s.gdpGrowth < -0.02) c = { type: "recession", severe: s.gdpGrowth < -0.06, msg: "Recession — GDP shrank " + (s.gdpGrowth * 100).toFixed(1) + "%" };
 
     // Crises don't just sit there: several consecutive years unresolved
     // forces collapse. Fewer years needed the more severe it is.
     if (c) {
       s.flags.crisisStreak = (s.flags.crisisType === c.type) ? (s.flags.crisisStreak || 0) + 1 : 1;
       s.flags.crisisType = c.type;
-      const streakLimit = c.severe ? 3 : 6;
+      const streakLimit = c.severe ? 4 : 7;
       if (s.flags.crisisStreak >= streakLimit) {
         s.gameOver = { type: "collapse", reason: c.msg + ", unresolved for " + s.flags.crisisStreak + " years" };
         return { type: "collapse", severe: true, msg: c.msg };
@@ -380,7 +380,7 @@
     }
     s.flags.crisisStreak = 0; s.flags.crisisType = null;
     // an outright debt catastrophe can still end things immediately
-    if (debtRatio > 1.6 && s.treasury <= 0.5) { s.gameOver = { type: "collapse", reason: "Debt spiral — creditors lost confidence" }; return { type: "collapse", severe: true, msg: "Debt spiral" }; }
+    if (debtRatio > 1.75 && s.treasury <= 0.5) { s.gameOver = { type: "collapse", reason: "Debt spiral — creditors lost confidence" }; return { type: "collapse", severe: true, msg: "Debt spiral" }; }
     return null;
   }
 
